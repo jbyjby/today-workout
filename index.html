@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101312">
+  <meta name="description" content="기기 안에 안전하게 저장되는 개인 운동 기록 앱">
+  <title>오늘운동</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div><span class="eyebrow">MY TRAINING LOG</span><h1>오늘운동</h1></div>
+      <button class="icon-btn" id="themeBtn" aria-label="화면 테마 변경" title="테마 변경">◐</button>
+    </header>
+
+    <main>
+      <section class="view active" id="homeView" aria-labelledby="homeTitle">
+        <div class="date-row"><div><p id="todayLabel"></p><h2 id="homeTitle">오늘도 한 세트부터.</h2></div><span class="streak" id="streakBadge">0일 연속</span></div>
+        <article class="hero-panel">
+          <div><span class="panel-label">이번 주</span><strong><b id="weekCount">0</b>회 운동</strong><p id="weekVolume">총 볼륨 0 kg</p></div>
+          <div class="week-bars" id="weekBars" aria-label="최근 7일 운동 기록"></div>
+        </article>
+        <div class="section-head"><h3>빠른 시작</h3><button class="text-btn" data-go="routinesView">루틴 관리</button></div>
+        <div class="routine-list" id="quickRoutines"></div>
+        <button class="primary wide" id="blankWorkoutBtn">+ 빈 운동 시작</button>
+        <div class="section-head"><h3>최근 기록</h3><button class="text-btn" data-go="historyView">전체 보기</button></div>
+        <div id="recentList" class="history-list"></div>
+      </section>
+
+      <section class="view" id="routinesView" aria-labelledby="routineTitle">
+        <button class="back-btn" data-back aria-label="이전 화면으로">← 뒤로</button>
+        <div class="page-head"><div><span class="eyebrow">PLAN</span><h2 id="routineTitle">내 루틴</h2></div><button class="primary compact" id="addRoutineBtn">+ 새 루틴</button></div>
+        <p class="subcopy">자주 하는 운동을 묶어두면 기록을 바로 시작할 수 있어요.</p>
+        <div class="routine-grid" id="routineGrid"></div>
+      </section>
+
+      <section class="view" id="historyView" aria-labelledby="historyTitle">
+        <button class="back-btn" data-back aria-label="이전 화면으로">← 뒤로</button>
+        <div class="page-head"><div><span class="eyebrow">HISTORY</span><h2 id="historyTitle">운동 기록</h2></div><button class="icon-btn" id="exportBtn" aria-label="데이터 내보내기">⇩</button></div>
+        <div class="stats-strip"><div><span>총 운동</span><b id="totalSessions">0</b></div><div><span>총 세트</span><b id="totalSets">0</b></div><div><span>총 볼륨</span><b id="totalVolume">0</b></div></div>
+        <article class="calendar-panel">
+          <div class="calendar-head"><button class="calendar-nav" id="prevMonth" aria-label="이전 달">←</button><h3 id="calendarTitle"></h3><button class="calendar-nav" id="nextMonth" aria-label="다음 달">→</button></div>
+          <div class="calendar-weekdays"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+          <p class="calendar-legend"><i></i> 운동을 기록한 날</p>
+        </article>
+        <article class="chart-panel">
+          <div class="chart-head"><div><span class="panel-label">PROGRESS</span><h3>최근 14일 운동량</h3></div><span id="chartSummary">0 kg</span></div>
+          <div class="line-chart" id="lineChart" aria-label="최근 14일 날짜별 운동량 꺾은선 그래프"></div>
+        </article>
+        <div class="section-head"><h3>누적 기록</h3><span class="record-count" id="recordCount">0개</span></div>
+        <div class="history-list" id="historyList"></div>
+        <div class="data-actions"><label class="secondary file-label">기록 가져오기<input id="importInput" type="file" accept="application/json"></label><button class="danger-ghost" id="resetBtn">모든 기록 삭제</button></div>
+      </section>
+
+      <section class="view" id="workoutView" aria-labelledby="workoutTitle">
+        <div class="workout-head"><button class="icon-btn" id="closeWorkoutBtn" aria-label="이전 화면으로">←</button><div><span id="workoutTimer">00:00</span><h2 id="workoutTitle">운동 기록</h2></div><button class="finish-btn" id="finishWorkoutBtn">완료</button></div>
+        <div class="workout-meta"><input id="workoutName" aria-label="운동 이름" value="오늘의 운동"><textarea id="workoutMemo" rows="2" placeholder="오늘 컨디션이나 메모"></textarea></div>
+        <div id="activeExercises"></div>
+        <button class="secondary wide" id="addExerciseBtn">+ 운동 추가</button>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="주요 메뉴">
+      <button class="nav-item active" data-go="homeView"><span>⌂</span>오늘</button>
+      <button class="nav-item" data-go="routinesView"><span>▦</span>루틴</button>
+      <button class="nav-main" id="navStartBtn" aria-label="운동 시작">+</button>
+      <button class="nav-item" data-go="historyView"><span>◷</span>기록</button>
+      <button class="nav-item" id="installBtn"><span>⇧</span>설치</button>
+    </nav>
+  </div>
+
+  <dialog id="exerciseDialog">
+    <form method="dialog" class="dialog-card">
+      <div class="dialog-head"><div><span class="eyebrow">EXERCISE</span><h3>운동 추가</h3></div><button class="icon-btn" value="cancel" aria-label="닫기">×</button></div>
+      <input id="exerciseSearch" class="search" placeholder="운동 이름 검색" autocomplete="off">
+      <div id="exerciseChoices" class="choice-list"></div>
+      <div class="custom-row"><input id="customExercise" placeholder="직접 입력"><button id="customAddBtn" type="button" class="secondary">추가</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="routineDialog">
+    <form method="dialog" class="dialog-card" id="routineForm">
+      <div class="dialog-head"><div><span class="eyebrow">ROUTINE</span><h3>새 루틴</h3></div><button class="icon-btn" value="cancel" aria-label="닫기">×</button></div>
+      <label>루틴 이름<input id="routineNameInput" required placeholder="예: 상체 A"></label>
+      <label>운동 목록<textarea id="routineExercisesInput" required rows="5" placeholder="한 줄에 하나씩 입력&#10;벤치프레스&#10;랫풀다운&#10;숄더프레스"></textarea></label>
+      <button class="primary wide" value="default">루틴 저장</button>
+    </form>
+  </dialog>
+
+  <div class="rest-timer" id="restTimer" hidden><div><span>휴식</span><b id="restTime">01:30</b></div><button id="minusRest">−15초</button><button id="plusRest">+15초</button><button id="skipRest">건너뛰기</button></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

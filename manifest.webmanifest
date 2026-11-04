@@ -1,0 +1,1 @@
+{"name":"오늘운동 - 나의 운동 기록","short_name":"오늘운동","description":"루틴, 세트, 중량, 반복 수를 기기에 기록하는 운동 앱","start_url":"./","display":"standalone","background_color":"#f2f3ef","theme_color":"#101312","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
